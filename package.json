@@ -1,6 +1,6 @@
 {
   "name": "yfm-concat",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Concatenate YAML front matter from several files into one object",
   "main": "index.js",
   "bin": {

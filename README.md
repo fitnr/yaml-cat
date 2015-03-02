@@ -70,12 +70,11 @@ foo.yaml:
 bar.yaml:
     bar: neato.keen
 +++
-```
-
+````
 
 The `delims` flag can take a comma-separated list of  two different delimters. If you don't want any trailing delimeter, end your delimiter with a comma.
 
-```
+````
 $ yfm-concat foo/*.yaml foo/bar/*.yaml --delims ---,
 ---
 foo.yaml:
