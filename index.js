@@ -30,7 +30,7 @@ var yfmConcat = function(pattern, options) {
 
     var matches = []
 
-    if (typeof(pattern) === 'object' && pattern.length !== undefined) {
+    if (Array.isArray(pattern)) {
         matches = pattern;
     } else if (typeof(pattern) == 'string') {
         matches = glob.sync(pattern, options);    
