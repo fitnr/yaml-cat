@@ -12,7 +12,7 @@ Given two files, `foo.yaml` and `bar.yaml` that look like this:
 foo: oh wow
 ````
 
-````
+````yaml
 ---
 # bar.yaml
 bar: neato keen
@@ -93,22 +93,25 @@ yfmConcat(pattern, options)
 ````javascript
 
 var opts = {
-    // The keys in the output are filenames. Interpret them relative to this
+    // (String) The keys in the output are the input filenames. Interpret them relative to this
+    // ignored if 'merge' is set
     cwd: '.',
 
     // The start and end delimiter for the output YAML
-    delims: ['---\n', '---\n'],
+    delims: ['---', '---'],
 
-    // return format
+    // (string) return format
     // if empty, function returns a Javascript object
     // valid formats: 'yaml', 'json'
     format: null,
 
-    // number of spaces to indent
+    // (Integer) number of spaces to indent
     indent: 4,
 
-    // javascript object to extend with the result
-    // js only.
-    extend: {}
+    // Object to extend with the result (js only)
+    extend: {},
+
+    // (Boolean) whether to merge all the front matter into a single object
+    merge: false,
 }
 ````
