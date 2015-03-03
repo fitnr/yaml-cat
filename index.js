@@ -12,7 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-var path = require('path')
+var path = require('path');
 var yfm = require('yfm');
 var glob = require('glob');
 
@@ -31,9 +31,9 @@ var yfmConcat = function(pattern, options) {
 
     var yfmOptions = {
         delims: options.hasOwnProperty('delims') ? options.delims : ['---', '---']
-    }
+    };
 
-    var matches = []
+    var matches = [];
 
     if (Array.isArray(pattern)) {
         matches = pattern;
@@ -45,15 +45,15 @@ var yfmConcat = function(pattern, options) {
 
     for (var i = 0, len = matches.length, filename, result; i < len; i++) {
         try {
-            result = yfm.read(matches[i], yfmOptions).context
+            result = yfm.read(matches[i], yfmOptions).context;
             if (options.merge)
-                extend(data, result)
+                extend(data, result);
             else
                 data[path.relative(options.cwd, matches[i])] = result;            
         } catch (e) {
             // pass
         }
-    };
+    }
 
     if (options.format.toLowerCase() === 'yaml') {
         var YAML = require('js-yaml');
@@ -63,9 +63,8 @@ var yfmConcat = function(pattern, options) {
         return JSON.stringify(data);
 
     } else {
-        return data
-
+        return data;
     }
-}
+};
 
 module.exports = yfmConcat;
