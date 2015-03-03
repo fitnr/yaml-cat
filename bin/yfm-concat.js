@@ -16,6 +16,7 @@ program
     .option('-C, --cwd <path>', 'Output with keys relative to this path', String, '')
     .option('-d, --delims <delimiter>', 'YAML delimiter', '---,---')
     .option('-i, --indent <indent>', 'Number of spaces to indent', 4)
+    .option('-m, --merge', 'Merge YFM into a single object')
     .parse(process.argv);
 
 // check arguments
@@ -42,7 +43,8 @@ var yfm = yfmConcat(program.args, {
     indent: program.indent,
     cwd: program.cwd,
     format: program.format,
-    delims: delims
+    delims: delims,
+    merge: program.merge
 });
 
 if (yfm === delims[0] + '\n' + '{}\n' + delims[1] + '\n') {

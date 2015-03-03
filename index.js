@@ -22,6 +22,11 @@ var yfmConcat = function(pattern, options) {
     options.cwd = options.cwd || '';
     options.format = options.format || '';
 
+    // options.merge uses the extend pkg to merge the data,
+    options.merge = options.merge || false;
+    if (options.merge) extend = require('extend');
+
+    // options.extend adds keys to an existing object
     var data = options.extend || {};
 
     var yfmOptions = {
@@ -38,10 +43,13 @@ var yfmConcat = function(pattern, options) {
         throw 'Need Array or string for "pattern", but received a ' + typeof(pattern);
     }
 
-    for (var i = 0, len = matches.length, filename; i < len; i++) {
+    for (var i = 0, len = matches.length, filename, result; i < len; i++) {
         try {
-            filename = path.relative(options.cwd, matches[i]);
-            data[filename] = yfm.read(matches[i], yfmOptions).context;
+            result = yfm.read(matches[i], yfmOptions).context
+            if (options.merge)
+                extend(data, result)
+            else
+                data[path.relative(options.cwd, matches[i])] = result;            
         } catch (e) {
             // pass
         }
