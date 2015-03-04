@@ -17,6 +17,7 @@ program
     .option('-d, --delims <delimiter>', 'YAML delimiter', '---,---')
     .option('-i, --indent <indent>', 'Number of spaces to indent', 4)
     .option('-m, --merge', 'Merge YFM into a single object')
+    .option('-e, --extend <key>', 'Put result under a key with this name')
     .parse(process.argv);
 
 // check arguments
@@ -37,15 +38,26 @@ var delims = program.delims.split(',');
 if (delims.length === 0) delims = ['---'];
 if (delims.length === 1) delims.push(delims[0]);
 
+var extend = false;
+if (program.extend) {
+    var data = {};
+    extend = data[program.extend] = {};
+}
 
 // YFM!
 var yfm = yfmConcat(program.args, {
     indent: program.indent,
     cwd: program.cwd,
-    format: program.format,
+    format: (extend) ? null : program.format,
     delims: delims,
-    merge: program.merge
+    merge: program.merge,
+    extend: extend,
 });
+
+// yfm is a JS object
+if (extend)
+    if (program.format == 'json') yfm = JSON.stringify(data);
+    else yfm = delims[0] + '\n' + require('js-yaml').safeDump(data) + delims[1] + '\n';
 
 if (yfm === delims[0] + '\n' + '{}\n' + delims[1] + '\n')
     yfm = delims[0] + '\n' + delims[1] + '\n';

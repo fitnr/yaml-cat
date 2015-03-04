@@ -24,7 +24,7 @@ var yfmConcat = function(pattern, options) {
 
     // options.merge uses the extend pkg to merge the data,
     options.merge = options.merge || false;
-    if (options.merge) extend = require('extend');
+    if (options.merge) merge = require('extend');
 
     // options.extend adds keys to an existing object
     var data = options.extend || {};
@@ -47,7 +47,7 @@ var yfmConcat = function(pattern, options) {
         try {
             result = yfm.read(matches[i], yfmOptions).context;
             if (options.merge)
-                extend(data, result);
+                merge(data, result);
             else
                 data[path.relative(options.cwd, matches[i])] = result;
         } catch (e) {
