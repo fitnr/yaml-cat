@@ -34,11 +34,13 @@ var yfmConcat = function(pattern, options) {
     };
     var matches = [];
 
-    if (Array.isArray(pattern)) {
-        matches = pattern;
-    } else if (typeof(pattern) == 'string') {
-        matches = glob.sync(pattern, options);    
-    } else {
+    if (typeof(pattern) == 'string')
+        pattern = [pattern];
+
+    if (Array.isArray(pattern))
+        for (var j = 0, plen = pattern.length; j < plen; j++)
+            Array.prototype.push.apply(matches, glob.sync(pattern[j]));
+    else
         throw 'Need Array or string for "pattern", but received a ' + typeof(pattern);
 
     for (var i = 0, len = matches.length, result; i < len; i++) {

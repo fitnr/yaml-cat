@@ -37,8 +37,6 @@ var delims = program.delims.split(',');
 if (delims.length === 0) delims = ['---'];
 if (delims.length === 1) delims.push(delims[0]);
 
-// pass along a string if only one argument
-if (program.args.length === 1) program.args = program.args[0];
 
 // YFM!
 var yfm = yfmConcat(program.args, {
