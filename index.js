@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 var path = require('path');
+var fs = require('fs');
 var yfm = require('yfm');
 var glob = require('glob');
 
@@ -42,6 +43,9 @@ var yfmConcat = function(pattern, options) {
             Array.prototype.push.apply(matches, glob.sync(pattern[j]));
     else
         throw 'Need Array or string for "pattern", but received a ' + typeof(pattern);
+
+    // filter out folders
+    matches = matches.filter(function(e){ return fs.lstatSync(e).isDirectory(); });
 
     for (var i = 0, len = matches.length, result; i < len; i++) {
         try {
