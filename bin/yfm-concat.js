@@ -8,7 +8,7 @@ var yfmConcat = require('..');
 function toLowerCase(val) { return String.prototype.toLowerCase.apply(val); }
 
 program
-    .version('0.0.1')
+    .version('0.1.5')
     .usage('[options] <file ...>')
     .description('Concatenate the YAML front matter of several files')
     .option('-o, --output <file>', 'Save result to file', String, '-')

@@ -45,7 +45,7 @@ var yfmConcat = function(pattern, options) {
         throw 'Need Array or string for "pattern", but received a ' + typeof(pattern);
 
     // filter out folders
-    matches = matches.filter(function(e){ return fs.lstatSync(e).isDirectory(); });
+    matches = matches.filter(function(e){ return fs.lstatSync(e).isFile(); });
 
     for (var i = 0, len = matches.length, result; i < len; i++) {
         try {
