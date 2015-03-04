@@ -21,12 +21,11 @@ program
 
 // check arguments
 var err = '';
-if (program.args.length < 1) {
+if (program.args.length < 1)
     err += 'error - please provide a files pattern\n';
-}
-if (['yaml', 'json'].indexOf(program.format) < 0) {
+
+if (['yaml', 'json'].indexOf(program.format) < 0)
     err += 'error - unknown format '+ program.format +'.\n';
-}
 
 if (err) {
     process.stderr.write(err);
@@ -35,8 +34,8 @@ if (err) {
 
 // delimiters
 var delims = program.delims.split(',');
-if (delims.length == 0) delims = ['---']
-if (delims.length == 1) delims.push(delims[0]);
+if (delims.length === 0) delims = ['---'];
+if (delims.length === 1) delims.push(delims[0]);
 
 // pass along a string if only one argument
 if (program.args.length === 1) program.args = program.args[0];
@@ -50,18 +49,15 @@ var yfm = yfmConcat(program.args, {
     merge: program.merge
 });
 
-if (yfm === delims[0] + '\n' + '{}\n' + delims[1] + '\n') {
+if (yfm === delims[0] + '\n' + '{}\n' + delims[1] + '\n')
     yfm = delims[0] + '\n' + delims[1] + '\n';
-}
 
 // output
-if (program.output != '-') {
-    var fs = require('fs');
-    fs.writeFile(program.output, yfm, function(err) {
+if (program.output === '-')
+    process.stdout.write(yfm);
+
+else
+    require('fs').writeFile(program.output, yfm, function(err) {
         if (err) process.stderr.write(err);
         else process.stdout.write(program.output + '\n');
     });
-    
-} else {
-    process.stdout.write(yfm);
-}
