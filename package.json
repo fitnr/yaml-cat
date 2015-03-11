@@ -8,9 +8,9 @@
   },
   "dependencies": {
     "commander": "^2.6.0",
-    "extend": "^2.0.0",
-    "glob": "^4.4.1",
+    "glob-concat": "^1.0.0",
     "js-yaml": "^3.2.7",
+    "merge": "^1.2.0",
     "yfm": "^0.2.0"
   },
   "devDependencies": {},

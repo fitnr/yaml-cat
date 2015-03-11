@@ -16,18 +16,18 @@ var path = require('path');
 var fs = require('fs');
 var yfm = require('yfm');
 var YAML = require('js-yaml');
-var glob = require('glob');
+var globconcat = require('glob-concat');
 
 var yamlcat = function(pattern, options) {
     options = typeof(options) == 'object' ? options : {};
-    options.indent = options.indent || 4;
+    options.indent = parseInt(options.indent || 4);
     options.cwd = options.cwd || '';
     options.format = (options.format || '').toLowerCase();
     options.ext = (typeof(options.ext) === 'undefined') ? true : options.ext;
 
-    // options.merge uses the extend pkg to merge the data,
+    // options.merge uses the merge pkg to merge the data,
     options.merge = options.merge || false;
-    if (options.merge) merge = require('extend');
+    if (options.merge) merge = require('merge');
 
     // options.extend adds keys to an existing object
     var data = options.extend || {};
@@ -39,17 +39,10 @@ var yamlcat = function(pattern, options) {
 
     var matches = [];
 
-    if (typeof(pattern) == 'string')
-        pattern = [pattern];
-
-    if (Array.isArray(pattern))
-        for (var j = 0, plen = pattern.length; j < plen; j++)
-            Array.prototype.push.apply(matches, glob.sync(pattern[j]));
+    if (typeof(pattern) == 'string' || Array.isArray(pattern))
+        matches = globconcat.sync(pattern, {nodir: true});
     else
         throw 'Need Array or string for "pattern", but received a ' + typeof(pattern);
-
-    // filter out folders
-    matches = matches.filter(function(e){ return fs.lstatSync(e).isFile(); });
 
     matches.forEach(function(match){
         try {
@@ -59,7 +52,7 @@ var yamlcat = function(pattern, options) {
                 result = YAML.safeLoad(fs.readFileSync(match, 'utf8'));
 
             if (options.merge)
-                merge(data, result);
+                data = merge(data, result);
             else {
                 var key = path.relative(options.cwd, match);
                 if (!options.ext) key = key.slice(0, -path.extname(key).length);
@@ -70,10 +63,10 @@ var yamlcat = function(pattern, options) {
         }
     });
 
-    if (options.format.toLowerCase() === 'yaml') {
+    if (options.format === 'yaml') {
         return yfmOptions.delims[0] + '\n' + YAML.safeDump(data, options) + yfmOptions.delims[1] + '\n';
 
-    } else if (options.format.toLowerCase() === 'json')
+    } else if (options.format === 'json')
         return JSON.stringify(data);
 
     else

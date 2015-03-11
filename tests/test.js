@@ -1,13 +1,13 @@
 var yc = require('../index');
 
-var pattern = __dirname + '/*.yaml';
+var pattern = __dirname + '/*.{hbs,yaml}';
 
 // output JS object
 var y = yc(pattern, {
     cwd: __dirname
 });
 
-console.assert(y['test.yaml'].foo == 'bar')
+console.assert(y['test.hbs'].foo == 'bar')
 
 // output YAML
 var test = yc(pattern, {
@@ -15,7 +15,7 @@ var test = yc(pattern, {
     cwd: __dirname
 }),
 
-    fixture = "---\ntest.yaml:\n    foo: bar\ntest2.yaml:\n    bar: bar\n---";
+    fixture = "---\ntest.hbs:\n    foo: bar\ntest.yaml:\n    bar: bar\n---";
 
 try  {
     console.assert(fixture.slice(6, 10) == test.slice(6, 10));
@@ -33,7 +33,7 @@ y = yc(pattern, {
 });
 
 try {
-    console.assert(JSON.parse(y)['test.yaml'].foo == 'bar');    
+    console.assert(JSON.parse(y)['test.hbs'].foo == 'bar');    
 } catch (e) {
     console.error("json didn't work")
     console.error(y)
