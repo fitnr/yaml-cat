@@ -22,7 +22,8 @@ var yamlcat = function(pattern, options) {
     options = typeof(options) == 'object' ? options : {};
     options.indent = options.indent || 4;
     options.cwd = options.cwd || '';
-    options.format = options.format || '';
+    options.format = (options.format || '').toLowerCase();
+    options.ext = (typeof(options.ext) === 'undefined') ? true : options.ext;
 
     // options.merge uses the extend pkg to merge the data,
     options.merge = options.merge || false;
@@ -50,22 +51,24 @@ var yamlcat = function(pattern, options) {
     // filter out folders
     matches = matches.filter(function(e){ return fs.lstatSync(e).isFile(); });
 
+    matches.forEach(function(match){
+        try {
             if (yfm.exists(match))
                 result = yfm.read(match, yfmOptions).context;
             else
                 result = YAML.safeLoad(fs.readFileSync(match, 'utf8'));
 
-    for (var i = 0, len = matches.length, result; i < len; i++) {
-        try {
-            result = yfm.read(matches[i], yfmOptions).context;
             if (options.merge)
                 merge(data, result);
-            else
-                data[path.relative(options.cwd, matches[i])] = result;
+            else {
+                var key = path.relative(options.cwd, match);
+                if (!options.ext) key = key.slice(0, -path.extname(key).length);
+                data[key] = result;
+            }
         } catch (e) {
-            console.error('Problem reading ' + matches[i]);
+            console.error('Problem reading ' + match);
         }
-    }
+    });
 
     if (options.format.toLowerCase() === 'yaml') {
         return yfmOptions.delims[0] + '\n' + YAML.safeDump(data, options) + yfmOptions.delims[1] + '\n';

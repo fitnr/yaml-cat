@@ -18,6 +18,7 @@ program
     .option('-i, --indent <indent>', 'Number of spaces to indent', parseInt, 4)
     .option('-m, --merge', 'Merge YAML into a single object')
     .option('-e, --extend <key>', 'Put result under a key with this name')
+    .option('-n, --no-ext', 'Strip the file extension from keys')
     .parse(process.argv);
 
 // check arguments
@@ -50,6 +51,7 @@ var result = yamlcat(program.args, {
     delims: delims,
     merge: program.merge,
     extend: extend,
+    ext: program.ext
 });
 
 // result is a JS object
