@@ -15,9 +15,10 @@
 var path = require('path');
 var fs = require('fs');
 var yfm = require('yfm');
+var YAML = require('js-yaml');
 var glob = require('glob');
 
-var yfmConcat = function(pattern, options) {
+var yamlcat = function(pattern, options) {
     options = typeof(options) == 'object' ? options : {};
     options.indent = options.indent || 4;
     options.cwd = options.cwd || '';
@@ -47,6 +48,11 @@ var yfmConcat = function(pattern, options) {
     // filter out folders
     matches = matches.filter(function(e){ return fs.lstatSync(e).isFile(); });
 
+            if (yfm.exists(match))
+                result = yfm.read(match, yfmOptions).context;
+            else
+                result = YAML.safeLoad(fs.readFileSync(match, 'utf8'));
+
     for (var i = 0, len = matches.length, result; i < len; i++) {
         try {
             result = yfm.read(matches[i], yfmOptions).context;
@@ -60,7 +66,6 @@ var yfmConcat = function(pattern, options) {
     }
 
     if (options.format.toLowerCase() === 'yaml') {
-        var YAML = require('js-yaml');
         return yfmOptions.delims[0] + '\n' + YAML.safeDump(data, options) + yfmOptions.delims[1] + '\n';
 
     } else if (options.format.toLowerCase() === 'json')
@@ -71,4 +76,4 @@ var yfmConcat = function(pattern, options) {
 
 };
 
-module.exports = yfmConcat;
+module.exports = yamlcat;

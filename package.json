@@ -1,10 +1,10 @@
 {
-  "name": "yfm-concat",
+  "name": "yaml-cat",
   "version": "0.1.5",
   "description": "Concatenate YAML front matter from several files into one object",
   "main": "index.js",
   "bin": {
-    "yfm-concat": "bin/yfm-concat.js"
+    "yaml-cat": "bin/yaml-cat.js"
   },
   "dependencies": {
     "commander": "^2.6.0",
@@ -19,9 +19,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/fitnr/yfm-concat"
+    "url": "http://github.com/fitnr/yaml-cat"
   },
   "keywords": [
+    "concatenate",
+    "command line utility",
+    "data processing",
     "yaml",
     "yaml front matter",
     "yfm"
@@ -29,7 +32,7 @@
   "author": "Neil Freeman",
   "license": "GPLv3",
   "bugs": {
-    "url": "https://github.com/fitnr/yfm-concat/issues"
+    "url": "https://github.com/fitnr/yaml-cat/issues"
   },
-  "homepage": "https://github.com/fitnr/yfm-concat"
+  "homepage": "https://github.com/fitnr/yaml-cat"
 }

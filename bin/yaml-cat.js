@@ -3,7 +3,7 @@
 'use strict';
 
 var program = require('commander');
-var yfmConcat = require('..');
+var yamlcat = require('..');
 
 function toLowerCase(val) { return String.prototype.toLowerCase.apply(val); }
 
@@ -16,7 +16,7 @@ program
     .option('-C, --cwd <path>', 'Output with keys relative to this path', String, '')
     .option('-d, --delims <delimiter>', 'YAML delimiter', '---,---')
     .option('-i, --indent <indent>', 'Number of spaces to indent', 4)
-    .option('-m, --merge', 'Merge YFM into a single object')
+    .option('-m, --merge', 'Merge YAML into a single object')
     .option('-e, --extend <key>', 'Put result under a key with this name')
     .parse(process.argv);
 
@@ -44,8 +44,8 @@ if (program.extend) {
     extend = data[program.extend] = {};
 }
 
-// YFM!
-var yfm = yfmConcat(program.args, {
+// CAT!
+var result = yamlcat(program.args, {
     indent: program.indent,
     cwd: program.cwd,
     format: (extend) ? null : program.format,
@@ -54,20 +54,19 @@ var yfm = yfmConcat(program.args, {
     extend: extend,
 });
 
-// yfm is a JS object
+// result is a JS object
 if (extend)
-    if (program.format == 'json') yfm = JSON.stringify(data);
-    else yfm = delims[0] + '\n' + require('js-yaml').safeDump(data) + delims[1] + '\n';
+    if (program.format == 'json') result = JSON.stringify(data);
+    else result = delims[0] + '\n' + require('js-yaml').safeDump(data) + delims[1] + '\n';
 
-if (yfm === delims[0] + '\n' + '{}\n' + delims[1] + '\n')
-    yfm = delims[0] + '\n' + delims[1] + '\n';
+if (result === delims[0] + '\n' + '{}\n' + delims[1] + '\n')
+    result = delims[0] + '\n' + delims[1] + '\n';
 
 // output
 if (program.output === '-')
-    process.stdout.write(yfm);
-
+    process.stdout.write(result);
 else
-    require('fs').writeFile(program.output, yfm, function(err) {
+    require('fs').writeFile(program.output, result, function(err) {
         if (err) process.stderr.write(err);
         else process.stdout.write(program.output + '\n');
     });
