@@ -14,8 +14,8 @@ program
     .option('-o, --output <file>', 'Save result to file', String, '-')
     .option('-f, --format <format>', 'Output format (YAML or JSON)', toLowerCase, 'yaml')
     .option('-C, --cwd <path>', 'Output with keys relative to this path', String, '')
-    .option('-d, --delims <delimiter>', 'YAML delimiter', '---,---')
-    .option('-i, --indent <indent>', 'Number of spaces to indent', 4)
+    .option('-d, --delims <delimiter>', 'YAML delimiter', String, '---,')
+    .option('-i, --indent <indent>', 'Number of spaces to indent', parseInt, 4)
     .option('-m, --merge', 'Merge YAML into a single object')
     .option('-e, --extend <key>', 'Put result under a key with this name')
     .parse(process.argv);
@@ -35,8 +35,6 @@ if (err) {
 
 // delimiters
 var delims = program.delims.split(',');
-if (delims.length === 0) delims = ['---'];
-if (delims.length === 1) delims.push(delims[0]);
 
 var extend = false;
 if (program.extend) {
