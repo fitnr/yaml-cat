@@ -1,54 +1,57 @@
-# yfm-concat
+# yaml-cat
 
-Concatenate the YAML front matter of a glob of files.
+Concatenate the YAML and YAML front matter of files.
 
 ## Usage
 
-Given two files, `foo.yaml` and `bar.yaml` that look like this:
+Given two files, `pets/cats.yaml` and `pets/dogs.yaml` that look like this:
 
 ````yaml
 ---
-# foo.yaml
-foo: oh wow
+# pets/cats.yaml
+sound: meow
+lives: 9
 ````
 
 ````yaml
+# pets/dogs.yaml
 ---
-# bar.yaml
-bar: neato keen
+sound: bark
 ````
 
-You can do this in node:
+Do this on the command line:
+
+````bash
+$ yaml-cat 'pets/*.yaml'
+---
+pets/cats.yaml:
+    sound: meow
+    lives: 9
+pets/dogs.yaml
+    sound: bark
+---
+````
+
+Or, do this in node:
 
 ````javascript
-> var yfmConcat = require('yfm-concat');
-> var result = yfmConcat('*.yaml');
+> var yamlCat = require('yaml-cat');
+> var result = yamlCat('pets/*.yaml');
 {
-    'bar.yaml': {
-        bar: 'neato keen'
+    'pets/cats.yaml': {
+        sound: 'meow',
+        lives: 9
     },
-    'foo.yaml': {
-        'foo': 'oh wow'
+    'pets/dogs.yaml': {
+        sound: 'bark',
     }
 }
 ````
 
-Or this on the command line:
-
-````bash
-$ yfm-concat '*.yaml'
----
-bar.yaml:
-    bar: neato keen
-foo.yaml
-    foo: oh wow
----
-````
-
 ## Usage
 
 ````bash
-  Usage: yfm-concat [options] <file ...>
+  Usage: yaml-cat [options] <file ...>
 
   Concatenate the YAML front matter of several files
 
@@ -58,34 +61,117 @@ foo.yaml
     -C, --cwd <path>          Output with keys relative to this path
     -d, --delims <delimiter>  YAML delimiter
     -i, --indent <indent>     Number of spaces to indent
+    -m, --merge               Merge YFM into a single object
 ````
 
 Example:
 ````
-$ yfm-concat 'foo/*.yaml' 'foo/bar/*.yaml' --cwd foo --delims +++ -o result.yaml
+$ yaml-cat pets/cats.yaml pets/dogs.yaml -o result.yaml
 $ cat result.yaml
-+++
-foo.yaml:
-    foo: oh wow
-bar.yaml:
-    bar: neato.keen
-+++
 ````
-
-The `delims` flag can take a comma-separated list of  two different delimters. If you don't want any trailing delimeter, end your delimiter with a comma.
-
-````
-$ yfm-concat foo/*.yaml foo/bar/*.yaml --delims ---,
+````yaml
 ---
-foo.yaml:
-    foo: oh wow
-bar.yaml:
-    bar: neato keen
+pets/cats.yaml:
+    sound: meow
+    lives: 9
+pets/dogs.yaml:
+    sound: bark
+````
+
+## Command line options
+
+### cwd
+`yaml-cat` uses the filepaths of input files as keys in the output. With `--cwd`, the key will be relative to the given directory.
+````
+$ yaml-cat --cwd pets pets/cats.yaml pets/dogs.yaml
+````
+````yaml
+---
+cats.yaml:
+    sound: meow
+    lives: 9
+dogs.yaml:
+    sound: bark
+````
+
+### no-ext
+
+Strip the extension from files in the given key. Use with `--cwd` to get just the file name-part as the key.
+
+````
+$ yaml-cat --cwd pets --no-ext pets/cats.yaml pets/dogs.yaml
+````
+````yaml
+---
+cats:
+    sound: meow
+    lives: 9
+dogs:
+    sound: bark
+````
+
+### extend
+Pass a string to `---extend` to place the entire result under that key.
+````
+$ yaml-cat --extent pets --cwd pets pets/cats.yaml pets/dogs.yaml
+````
+````yaml
+---
+pets:
+    cats.yaml:
+        sound: meow
+        lives: 9
+    dogs.yaml:
+        sound: bark
+````
+
+### format
+Choose output in JSON or YAML.
+````
+$ yaml-cat --format json pets/cats.yaml pets/dogs.yaml
+{"pets/cats.yaml": ..., "pets/dogs.yaml": ...}
+````
+
+### merge
+Merge all the yaml front matter into a single object. Overlapping keys will be given the value of the last given file, which could be unpredictible if globs are used.
+````
+$ yaml-cat --merge pets/cats.yaml pets/dogs.yaml
+````
+````yaml
+---
+sound: bark
+lives: 9
+````
+
+Obviously that isn't that effective in this example, but maybe your data isn't as contrived as it is here.
+
+The `--merge` and `--extend` options may seem similar, but they have a very different effect. Running them together will merge the entire result AND place it under a single key.
+````
+$ yaml-cat --extend pets --merge pets/cats.yaml pets/dogs.yaml
+````
+````yaml
+---
+pets:
+    sound: bark
+    lives: 9
+````
+
+### delims
+
+The default delimiter is `---`, and by default `yaml-cat` only puts one at the start of YAML. If you want an ending delimeter, pass a comma-separated list of two delimters. Does nothing when `--format` equals `json`.
+````
+$ yaml-cat foo/*.yaml foo/bar/*.yaml --delims +++,+++
++++
+foo/foo.yaml:
+    ...
+foo/bar/bar.yaml:
+    ...
++++
 ````
 
 ### API
 
-yfmConcat(pattern, options)
+yamlcat(pattern, options)
 
 * pattern: A file, list of files, or [glob](https://www.npmjs.com/package/glob).
 * options: A javascript object. The default looks like this:
@@ -108,7 +194,7 @@ var opts = {
     // (Integer) number of spaces to indent
     indent: 4,
 
-    // Object to extend with the result (js only)
+    // Object to extend with the result
     extend: {},
 
     // (Boolean) whether to merge all the front matter into a single object
