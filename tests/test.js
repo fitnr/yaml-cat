@@ -7,7 +7,7 @@ var y = yc(pattern, {
     cwd: __dirname
 });
 
-console.assert(y['test.hbs'].foo == 'bar')
+console.assert(y['test.hbs'].foo == 'bar');
 
 // output YAML
 var test = yc(pattern, {
@@ -21,7 +21,7 @@ try  {
     console.assert(fixture.slice(6, 10) == test.slice(6, 10));
     console.assert(fixture.slice(21, 4) == test.slice(21, 4));
 } catch (e) {
-    console.error("yaml output didn't work")
+    console.error("yaml output didn't work");
     console.error(fixture);
     console.error(test);
 }
@@ -35,6 +35,6 @@ y = yc(pattern, {
 try {
     console.assert(JSON.parse(y)['test.hbs'].foo == 'bar');    
 } catch (e) {
-    console.error("json didn't work")
-    console.error(y)
+    console.error("json didn't work");
+    console.error(y);
 }

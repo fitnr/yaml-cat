@@ -30,7 +30,7 @@
     "yfm"
   ],
   "author": "Neil Freeman",
-  "license": "GPLv3",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/fitnr/yaml-cat/issues"
   },

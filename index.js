@@ -33,7 +33,7 @@ var yamlcat = function(pattern, options) {
     var data = options.extend || {};
 
     var yfmOptions = {
-        delims: options.hasOwnProperty('delims') ? options.delims : ['---', '']
+        delims: 'delims' in options ? options.delims : ['---', '']
     };
     if (yfmOptions.delims.length == 1) delims[1] = '';
 

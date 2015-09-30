@@ -12,7 +12,6 @@ Given two files, `pets/cats.yaml` and `pets/dogs.yaml` that look like this:
 sound: meow
 lives: 9
 ````
-
 ````yaml
 # pets/dogs.yaml
 ---
@@ -23,6 +22,8 @@ Do this on the command line:
 
 ````bash
 $ yaml-cat 'pets/*.yaml'
+````
+````yaml
 ---
 pets/cats.yaml:
     sound: meow
