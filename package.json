@@ -1,6 +1,6 @@
 {
   "name": "yaml-cat",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Concatenate YAML front matter from several files into one object",
   "main": "index.js",
   "bin": {
@@ -13,7 +13,6 @@
     "merge": "^1.2.0",
     "yfm": "^0.2.0"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "node tests/test.js"
   },
