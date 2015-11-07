@@ -21,7 +21,7 @@ sound: bark
 Do this on the command line:
 
 ````bash
-$ yaml-cat 'pets/*.yaml'
+yaml-cat 'pets/*.yaml'
 ````
 ````yaml
 ---
@@ -63,11 +63,14 @@ Or, do this in node:
     -d, --delims <delimiter>  YAML delimiter
     -i, --indent <indent>     Number of spaces to indent
     -m, --merge               Merge YFM into a single object
+    -e, --extend <key>        Put result under a key with this name
+    -n, --no-ext              Strip the file extension from keys
+    -a, --array               Return an array (list) of objects
 ````
 
 Example:
 ````
-$ yaml-cat pets/cats.yaml pets/dogs.yaml -o result.yaml
+yaml-cat pets/cats.yaml pets/dogs.yaml -o result.yaml
 $ cat result.yaml
 ````
 ````yaml
@@ -84,7 +87,7 @@ pets/dogs.yaml:
 ### cwd
 `yaml-cat` uses the filepaths of input files as keys in the output. With `--cwd`, the key will be relative to the given directory.
 ````
-$ yaml-cat --cwd pets pets/cats.yaml pets/dogs.yaml
+yaml-cat --cwd pets pets/cats.yaml pets/dogs.yaml
 ````
 ````yaml
 ---
@@ -100,7 +103,7 @@ dogs.yaml:
 Strip the extension from files in the given key. Use with `--cwd` to get just the file name-part as the key.
 
 ````
-$ yaml-cat --cwd pets --no-ext pets/cats.yaml pets/dogs.yaml
+yaml-cat --cwd pets --no-ext pets/cats.yaml pets/dogs.yaml
 ````
 ````yaml
 ---
@@ -114,7 +117,7 @@ dogs:
 ### extend
 Pass a string to `---extend` to place the entire result under that key.
 ````
-$ yaml-cat --extent pets --cwd pets pets/cats.yaml pets/dogs.yaml
+yaml-cat --extent pets --cwd pets pets/cats.yaml pets/dogs.yaml
 ````
 ````yaml
 ---
@@ -129,14 +132,21 @@ pets:
 ### format
 Choose output in JSON or YAML.
 ````
-$ yaml-cat --format json pets/cats.yaml pets/dogs.yaml
-{"pets/cats.yaml": ..., "pets/dogs.yaml": ...}
+yaml-cat --format json pets/cats.yaml pets/dogs.yaml
 ````
+````json
+{
+    "pets/cats.yaml": {...},
+    "pets/dogs.yaml": {...}
+}
+````
+
+(Note that JSON output is prettified here for readability. The actual function does not prettify.)
 
 ### merge
 Merge all the yaml front matter into a single object. Overlapping keys will be given the value of the last given file, which could be unpredictible if globs are used.
 ````
-$ yaml-cat --merge pets/cats.yaml pets/dogs.yaml
+yaml-cat --merge pets/cats.yaml pets/dogs.yaml
 ````
 ````yaml
 ---
@@ -148,7 +158,7 @@ Obviously that isn't that effective in this example, but maybe your data isn't a
 
 The `--merge` and `--extend` options may seem similar, but they have a very different effect. Running them together will merge the entire result AND place it under a single key.
 ````
-$ yaml-cat --extend pets --merge pets/cats.yaml pets/dogs.yaml
+yaml-cat --extend pets --merge pets/cats.yaml pets/dogs.yaml
 ````
 ````yaml
 ---
@@ -161,13 +171,44 @@ pets:
 
 The default delimiter is `---`, and by default `yaml-cat` only puts one at the start of YAML. If you want an ending delimeter, pass a comma-separated list of two delimters. Does nothing when `--format` equals `json`.
 ````
-$ yaml-cat foo/*.yaml foo/bar/*.yaml --delims +++,+++
+yaml-cat --delims +++,+++ foo/*.yaml foo/bar/*.yaml
+````
+````
 +++
 foo/foo.yaml:
     ...
 foo/bar/bar.yaml:
     ...
 +++
+````
+
+### array
+
+Use this option to return an array of objects:
+````
+yaml-cat --array pets/cats.yaml pets/dogs.yaml
+````
+````yaml
+-
+    sound: meow
+    lives: 9
+-
+    sound: bark
+````
+
+````
+yaml-cat --format json --array pets/cats.yaml pets/dogs.yaml
+````
+````json
+[
+    {
+        "sound": "meow",
+        "lives": 9
+    },
+    {
+        "sound": "bark"
+    }
+]
 ````
 
 ### API
