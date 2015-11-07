@@ -16,6 +16,7 @@ var test = yc(pattern, {
 }),
 
     fixture = "---\ntest.hbs:\n    foo: bar\ntest.yaml:\n    bar: bar\n---";
+    arrFix = [{foo: 'bar'}, {bar: 'bar', cat: 'meow'}];
 
 try  {
     console.assert(fixture.slice(6, 10) == test.slice(6, 10));
@@ -37,4 +38,15 @@ try {
 } catch (e) {
     console.error("json didn't work");
     console.error(y);
+}
+
+try{
+    var arr = yc(pattern, {format: 'json', array: true});
+    console.assert(JSON.parse(arr)[0].foo == arrFix[0].foo);
+    console.assert(JSON.parse(arr)[1].bar == arrFix[1].bar);
+
+} catch(e){
+    console.log("array option didn't work");
+    console.error(JSON.parse(arr));
+    console.error(arrFix);
 }

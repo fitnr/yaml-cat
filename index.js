@@ -32,10 +32,13 @@ var yamlcat = function(pattern, options) {
     // options.extend adds keys to an existing object
     var data = options.extend || {};
 
+    // options.array overrides this, and appends objects to an array
+    if (options.array) data = [];
+
     var yfmOptions = {
         delims: 'delims' in options ? options.delims : ['---', '']
     };
-    if (yfmOptions.delims.length == 1) delims[1] = '';
+    if (yfmOptions.delims.length == 1) yfmOptions.delims[1] = '';
 
     var matches = [];
 
@@ -51,6 +54,8 @@ var yamlcat = function(pattern, options) {
             else
                 result = YAML.safeLoad(fs.readFileSync(match, 'utf8'));
 
+            if (options.array)
+                data.push(result);
             if (options.merge)
                 data = merge(data, result);
             else {

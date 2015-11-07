@@ -19,6 +19,7 @@ program
     .option('-m, --merge', 'Merge YAML into a single object')
     .option('-e, --extend <key>', 'Put result under a key with this name')
     .option('-n, --no-ext', 'Strip the file extension from keys')
+    .option('-a, --array', 'Return an array (list) of objects')
     .parse(process.argv);
 
 // check arguments
@@ -45,6 +46,7 @@ if (program.extend) {
 
 // CAT!
 var result = yamlcat(program.args, {
+    array: program.array,
     indent: program.indent,
     cwd: program.cwd,
     format: (extend) ? null : program.format,
