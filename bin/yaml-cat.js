@@ -8,7 +8,7 @@ var yamlcat = require('..');
 function toLowerCase(val) { return String.prototype.toLowerCase.apply(val); }
 
 program
-    .version('0.2.0')
+    .version('0.3.2')
     .usage('[options] <file ...>')
     .description('Concatenate the YAML front matter of several files')
     .option('-o, --output <file>', 'Save result to file', String, '-')
