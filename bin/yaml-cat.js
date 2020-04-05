@@ -14,7 +14,6 @@ program
     .option('-o, --output <file>', 'Save result to file', String, '-')
     .option('-f, --format <format>', 'Output format (YAML or JSON)', toLowerCase, 'yaml')
     .option('-C, --cwd <path>', 'Output with keys relative to this path', String, '')
-    .option('-d, --delims <delimiter>', 'YAML delimiter', String, '---,')
     .option('-i, --indent <indent>', 'Number of spaces to indent', parseInt, 4)
     .option('-m, --merge', 'Merge YAML into a single object')
     .option('-e, --extend <key>', 'Put result under a key with this name')
@@ -35,9 +34,6 @@ if (err) {
     process.exit(1);
 }
 
-// delimiters
-var delims = program.delims.split(',');
-
 var extend = false;
 if (program.extend) {
     var data = {};
@@ -50,7 +46,6 @@ var result = yamlcat(program.args, {
     indent: program.indent,
     cwd: program.cwd,
     format: (extend) ? null : program.format,
-    delims: delims,
     merge: program.merge,
     extend: extend,
     ext: program.ext
@@ -59,10 +54,10 @@ var result = yamlcat(program.args, {
 // result is a JS object
 if (extend)
     if (program.format == 'json') result = JSON.stringify(data);
-    else result = delims[0] + '\n' + require('js-yaml').safeDump(data) + delims[1] + '\n';
+    else result = '---\n' + require('js-yaml').safeDump(data) + '\n---\n';
 
-if (result === delims[0] + '\n' + '{}\n' + delims[1] + '\n')
-    result = delims[0] + '\n' + delims[1] + '\n';
+if (result === '---\n{}\n---\n')
+    result = '---\n---\n';
 
 // output
 if (program.output === '-')

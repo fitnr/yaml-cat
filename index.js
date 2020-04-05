@@ -14,7 +14,7 @@
 
 var path = require('path');
 var fs = require('fs');
-var yfm = require('yfm');
+var fm = require('front-matter');
 var YAML = require('js-yaml');
 var globconcat = require('glob-concat');
 
@@ -35,11 +35,6 @@ var yamlcat = function(pattern, options) {
     // options.array overrides this, and appends objects to an array
     if (options.array) data = [];
 
-    var yfmOptions = {
-        delims: 'delims' in options ? options.delims : ['---', '']
-    };
-    if (yfmOptions.delims.length == 1) yfmOptions.delims[1] = '';
-
     var matches = [];
 
     if (typeof(pattern) == 'string' || Array.isArray(pattern))
@@ -49,10 +44,8 @@ var yamlcat = function(pattern, options) {
 
     matches.forEach(function(match){
         try {
-            if (yfm.exists(match))
-                result = yfm.read(match, yfmOptions).context;
-            else
-                result = YAML.safeLoad(fs.readFileSync(match, 'utf8'));
+            var f = fs.readFileSync(match, 'utf8');
+            var result = fm(f).attributes;
 
             if (options.array)
                 data.push(result);
@@ -69,7 +62,7 @@ var yamlcat = function(pattern, options) {
     });
 
     if (options.format === 'yaml') {
-        return yfmOptions.delims[0] + '\n' + YAML.safeDump(data, options) + yfmOptions.delims[1] + '\n';
+        return '---\n' + YAML.safeDump(data, options) + '\n---\n';
 
     } else if (options.format === 'json')
         return JSON.stringify(data);

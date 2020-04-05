@@ -16,6 +16,7 @@ lives: 9
 # pets/dogs.yaml
 ---
 sound: bark
+---
 ````
 
 Do this on the command line:
@@ -60,7 +61,6 @@ Or, do this in node:
     -o, --output <file>       Save result to file
     -f, --format <format>     Output format (YAML or JSON)
     -C, --cwd <path>          Output with keys relative to this path
-    -d, --delims <delimiter>  YAML delimiter
     -i, --indent <indent>     Number of spaces to indent
     -m, --merge               Merge YFM into a single object
     -e, --extend <key>        Put result under a key with this name
@@ -80,6 +80,7 @@ pets/cats.yaml:
     lives: 9
 pets/dogs.yaml:
     sound: bark
+---
 ````
 
 ## Command line options
@@ -96,6 +97,7 @@ cats.yaml:
     lives: 9
 dogs.yaml:
     sound: bark
+---
 ````
 
 ### no-ext
