@@ -10,7 +10,7 @@
     "commander": "^2.9.0",
     "glob-concat": "^1.0.1",
     "js-yaml": "^3.13.1",
-    "merge": "^1.2.1",
+    "merge": "^2.1.1",
     "front-matter": "^3.1.0"
   },
   "scripts": {
